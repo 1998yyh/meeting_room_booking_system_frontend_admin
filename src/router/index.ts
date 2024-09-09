@@ -6,7 +6,24 @@ const router = createRouter({
     {
       path: '/',
       name: 'Index',
-      component: () => import('../views/Index.vue')
+      component: () => import('../views/Index.vue'),
+      children:[
+        {
+          path:'',
+          name:'list',
+          component:()=> import('../views/List.vue')
+        },
+        {
+          path:'user/info_modify',
+          name:'infoModify',
+          component:()=> import('../views/UpdateInfo.vue')
+        },
+        {
+          path:'user/password_modify',
+          name:'passwordModify',
+          component:()=> import('../views/UpdatePassword.vue')
+        }
+      ]
     },
     {
       path: '/login',

@@ -11,11 +11,6 @@
     </el-form>
 
 
-    <div class="opreate-area" flex justify-between m-15>
-      <el-link type="primary" @click="router.push('/register')">创建账户</el-link>
-      <el-link type="primary" @click="router.push('/updatePassword')">忘记密码</el-link>
-    </div>
-
     <div class="login-area" flex-center>
       <el-button w-lg type="primary" @click="submit">登录</el-button>
     </div>

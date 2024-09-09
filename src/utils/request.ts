@@ -1,10 +1,12 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { ElMessage } from "element-plus";
+import router from "../router";
+import { baseResponse } from "../api/base";
 
 async function refreshToken() {
-    const res = await axiosInstance.get('/user/refresh', {
+    const res:baseResponse = await axiosInstance.get('/user/admin/refresh', {
         params: {
-            refresh_token: localStorage.getItem('refresh_token')
+            refreshToken: localStorage.getItem('refresh_token')
         }
     });
     localStorage.setItem('access_token', res.data.access_token || '');
@@ -48,7 +50,6 @@ axiosInstance.interceptors.response.use(
 
         const { data, config } = error.response;
 
-
         if (refreshing) {
             return new Promise((resolve) => {
                 queue.push({
@@ -60,6 +61,8 @@ axiosInstance.interceptors.response.use(
 
 
 
+
+
         if (data.code === 401 && !config.url.includes('/user/refresh')) {
 
             refreshing = true;
@@ -68,14 +71,17 @@ axiosInstance.interceptors.response.use(
 
             refreshing = false;
 
-            if (res.status === 200 || res.status === 201) {
+
+            if (res.code === 200 || res.code === 201) {
 
                 queue.forEach(({ config, resolve }) => {
                     resolve(axiosInstance(config))
                 })
 
                 return axiosInstance(config);
+
             } else {
+
                 ElMessage.error(res.data)
 
                 setTimeout(() => {

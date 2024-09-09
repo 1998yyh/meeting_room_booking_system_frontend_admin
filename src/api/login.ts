@@ -1,10 +1,7 @@
 import request from '../utils/request'
+import { baseResponse } from './base';
 
-interface baseResponse {
-  code: number;
-  message: string;
-  data: Record<string, any>
-}
+
 
 export interface UserInfo {
   headPic: string;
@@ -14,7 +11,7 @@ export interface UserInfo {
 }
 
 export async function login(username: string, password: string): Promise<baseResponse> {
-  return await request.post('/user/login', {
+  return await request.post('/user/admin/login', {
     username, password
   });
 }
@@ -36,14 +33,12 @@ export async function sendUpdateCaptcha(address: string): Promise<baseResponse> 
   })
 }
 
-
-
 export async function register(data: Record<string, any>): Promise<baseResponse> {
   return await request.post('/user/register', data)
 }
 
 export async function updatePassword(data: Record<string, any>): Promise<baseResponse> {
-  return await request.post('/user/update_password', data)
+  return await request.post('/user/admin/update_password', data)
 }
 
 
@@ -52,7 +47,7 @@ export async function getUserInfo(): Promise<baseResponse> {
 }
 
 export async function updateInfo(data: UserInfo): Promise<baseResponse> {
-  return await request.post('/user/update', data);
+  return await request.post('/user/admin/update', data);
 }
 
 export async function updateUserInfoCaptcha(): Promise<baseResponse> {

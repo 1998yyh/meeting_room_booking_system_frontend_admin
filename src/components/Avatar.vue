@@ -25,7 +25,7 @@ const router = useRouter();
 
 
 const handleClick = () => {
-  router.push('/updateInfo')
+  router.push('/user/info_modify')
 }
 
 
