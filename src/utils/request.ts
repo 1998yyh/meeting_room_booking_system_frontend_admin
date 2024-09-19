@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { ElMessage } from "element-plus";
-import router from "../router";
 import { baseResponse } from "../api/base";
 
 async function refreshToken() {
@@ -8,7 +7,11 @@ async function refreshToken() {
         params: {
             refreshToken: localStorage.getItem('refresh_token')
         }
-    });
+    }).catch((e)=>{
+        console.log('e',e);
+    })
+
+    console.log('res',res);
     localStorage.setItem('access_token', res.data.access_token || '');
     localStorage.setItem('refresh_token', res.data.refresh_token || '');
     return res;
@@ -63,11 +66,15 @@ axiosInstance.interceptors.response.use(
 
 
 
-        if (data.code === 401 && !config.url.includes('/user/refresh')) {
+        if (data.code === 401 && !config.url.includes('/user/admin/refresh')) {
+
+            console.log('11111');
 
             refreshing = true;
 
             const res = await refreshToken();
+
+            console.log('res',res);
 
             refreshing = false;
 
@@ -90,6 +97,8 @@ axiosInstance.interceptors.response.use(
             }
 
         } else {
+
+             console.log(2222);
             return error.response.data;
         }
     }
