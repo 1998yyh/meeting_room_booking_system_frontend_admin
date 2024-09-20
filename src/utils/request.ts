@@ -2,18 +2,29 @@ import axios, { AxiosRequestConfig } from "axios";
 import { ElMessage } from "element-plus";
 import { baseResponse } from "../api/base";
 
+
+let refreshing = false;
+
+let queue: PendingTask[] = [];
+
+
+
 async function refreshToken() {
     const res:baseResponse = await axiosInstance.get('/user/admin/refresh', {
         params: {
             refreshToken: localStorage.getItem('refresh_token')
         }
-    }).catch((e)=>{
-        console.log('e',e);
     })
 
-    console.log('res',res);
-    localStorage.setItem('access_token', res.data.access_token || '');
-    localStorage.setItem('refresh_token', res.data.refresh_token || '');
+    if(res.data?.access_token && res.data?.refresh_token){
+        localStorage.setItem('access_token', res.data.access_token || '');
+        localStorage.setItem('refresh_token', res.data.refresh_token || '');
+    }else{
+        window.location.href = '/login';
+        queue = [];
+        refreshing = false;
+    }
+    
     return res;
 }
 
@@ -36,9 +47,7 @@ interface PendingTask {
     config: AxiosRequestConfig
     resolve: Function
 }
-let refreshing = false;
 
-const queue: PendingTask[] = [];
 
 
 
@@ -47,13 +56,15 @@ axiosInstance.interceptors.response.use(
         return response.data
     },
     async (error) => {
+        
         if (!error.response) {
             return Promise.reject(error)
         }
 
         const { data, config } = error.response;
 
-        if (refreshing) {
+
+        if (refreshing && !config.url.includes('/user/admin/refresh')) {
             return new Promise((resolve) => {
                 queue.push({
                     config,
@@ -62,20 +73,14 @@ axiosInstance.interceptors.response.use(
             });
         }
 
-
-
-
-
         if (data.code === 401 && !config.url.includes('/user/admin/refresh')) {
-
-            console.log('11111');
 
             refreshing = true;
 
             const res = await refreshToken();
 
-            console.log('res',res);
 
+            console.log('res',res);
             refreshing = false;
 
 
@@ -91,14 +96,13 @@ axiosInstance.interceptors.response.use(
 
                 ElMessage.error(res.data)
 
-                setTimeout(() => {
-                    window.location.href = '/login';
-                }, 1500);
+                console.log(1111111);
+
+           
             }
 
         } else {
-
-             console.log(2222);
+            
             return error.response.data;
         }
     }

@@ -27,19 +27,19 @@ import { useUserInfo } from '../hooks/useUserInfo'
 
 const menuList = [
   {
-    key: '/',
+    key: '/meeting_room_manage',
     label: "会议室管理",
   },
   {
-    key: '/a',
+    key: '/booking_manage',
     label: "预定管理"
   },
   {
-    key: '/b',
+    key: '/',
     label: "用户管理"
   },
   {
-    key: '/c',
+    key: '/statistics',
     label: "统计"
   },
   {

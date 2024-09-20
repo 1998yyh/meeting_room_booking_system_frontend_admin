@@ -72,17 +72,11 @@ const handleImageSubmit = async () => {
 }
 
 
-
-
-
-
 const submit = async () => {
   await updateInfo(form)
   await getInfo();
   ElMessage.success('修改成功')
   router.replace('/')
-
-
 }
 
 const sendEmail = async () => {

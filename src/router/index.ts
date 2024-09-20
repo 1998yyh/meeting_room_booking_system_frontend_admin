@@ -22,6 +22,21 @@ const router = createRouter({
           path:'user/password_modify',
           name:'passwordModify',
           component:()=> import('../views/UpdatePassword.vue')
+        },
+        {
+          path:'meeting_room_manage',
+          name:'meetingRoomManage',
+          component:()=> import('../views/MeetingRoomManage.vue')
+        },
+        {
+          path:'booking_manage',
+          name:'bookingManage',
+          component:()=> import('../views/BookingManage.vue')
+        },
+        {
+          path:'statistics',
+          name:'statistics',
+          component:()=> import('../views/Statistics.vue')
         }
       ]
     },
