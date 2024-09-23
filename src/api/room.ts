@@ -2,7 +2,22 @@ import request from '../utils/request'
 import { baseResponse } from './base';
 
 
-export async function userSearch(
+export interface CreateMeetingRoom {
+  name: string;
+  capacity: number;
+  location: string;
+  equipment: string;
+  description: string;
+}
+
+
+export interface UpdateMeetingRoom extends CreateMeetingRoom {
+  id: number
+}
+
+
+
+export async function roomSearch(
   pageNo: number = 1,
   pageSize: number = 10,
   name?: string,
@@ -22,5 +37,20 @@ export async function userSearch(
 
 
 export async function deleteRoom(id: number): Promise<baseResponse> {
-  return await request.post('/meeting-room/delete/'+id)
+  return await request.post('/meeting-room/delete/' + id)
 }
+
+export async function createRoom(data: CreateMeetingRoom): Promise<baseResponse> {
+  return await request.post('/meeting-room/create/', data)
+}
+
+
+export async function getRoom(id: number): Promise<baseResponse> {
+  return await request.get('/meeting-room/room/' + id)
+}
+
+
+export async function renewalRoom(data: UpdateMeetingRoom): Promise<baseResponse> {
+  return await request.post('/meeting-room/update/', data)
+}
+

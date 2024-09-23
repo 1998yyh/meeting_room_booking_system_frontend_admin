@@ -16,8 +16,8 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="getUserList">搜索会议室</el-button>
-          <el-button type="primary" @click="getUserList">添加会议室</el-button>
+          <el-button type="primary" @click="getRoomList">搜索会议室</el-button>
+          <el-button type="primary" @click="handleAddRoomClick">添加会议室</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -37,23 +37,28 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="操作">
+        <el-table-column align="center" label="操作" width="200px">
           <template #default="scope">
-            <el-button @click="delRoom($event, scope.row.id)" text type="primary">删除</el-button>
+            <span class="control-text" @click="updateRoom($event, scope.row.id)">更新</span>
+            <span class="control-text" ml-4 @click="delRoom($event, scope.row.id)">删除</span>
           </template>
         </el-table-column>
       </el-table>
       <el-pagination v-model:current-page="paginationData.pageNo" v-model:page-size="paginationData.pageSize"
         :page-sizes="[5, 10, 20, 50]" layout="sizes, prev, pager, next" :total="paginationData.totalCount"
-        @size-change="getUserList" @current-change="getUserList" />
+        @size-change="getRoomList" @current-change="getRoomList" />
     </div>
+
+    <create-room-modal ref="createRoomModalRef" @update="handleUpdateRoomEvent"
+      @submit="handleAddRoomEvent"></create-room-modal>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
-import { deleteRoom, userSearch } from '../api/room'
-import { ElMessage } from 'element-plus';
+import { reactive, useTemplateRef } from 'vue'
+import CreateRoomModal from '../components/CreateRoomModal.vue';
+import { deleteRoom, roomSearch, createRoom, getRoom, renewalRoom, type CreateMeetingRoom } from '../api/room'
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 interface SearchMeetingRoom {
   name?: string;
@@ -88,14 +93,15 @@ const paginationData = reactive({
 
 const tableData = ref<MeetingRoomSearchResult[]>([])
 
+const createRoomModalRef = useTemplateRef('createRoomModalRef')
+
 
 onMounted(() => {
-  getUserList();
+  getRoomList();
 })
 
-const getUserList = async () => {
-
-  const res = await userSearch(
+const getRoomList = async () => {
+  const res = await roomSearch(
     paginationData.pageNo,
     paginationData.pageSize,
     formInline.name,
@@ -109,20 +115,82 @@ const getUserList = async () => {
   } else {
     ElMessage.error(res.message)
   }
-
 }
 
 
 const delRoom = async (_: any, id: number) => {
+  ElMessageBox.confirm(
+    '确定要删除吗？',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  ).then(async () => {
+    await deleteRoom(id)
+    paginationData.pageNo = 1;
+    getRoomList();
+  })
+}
 
-  const res = await deleteRoom(id)
-  
 
-  getUserList();
+const updateRoom = async (_: any, id: number) => {
+  const { code, data, message } = await getRoom(id)
 
+  if ([200, 201].includes(code)) {
+    const { id } = data;
+    createRoomModalRef.value!.updateRoom(id, data as CreateMeetingRoom)
+  } else {
+    ElMessage.error(message)
+  }
+}
+
+
+
+
+const handleAddRoomClick = async () => {
+  createRoomModalRef.value!.createRoom();
+}
+
+
+const handleAddRoomEvent = async (data: CreateMeetingRoom) => {
+  const { code, message } = await createRoom(data)
+  if (code === 200 || code === 201) {
+    paginationData.pageNo = 1;
+    getRoomList();
+    createRoomModalRef.value!.closeModal();
+    ElMessage.success('创建成功')
+  } else {
+    ElMessage.error(message)
+  }
+}
+
+const handleUpdateRoomEvent = async (id: number, data: CreateMeetingRoom) => {
+  const { code, message } = await renewalRoom({
+    id,
+    ...data
+  })
+  if (code === 200 || code === 201) {
+    paginationData.pageNo = 1;
+    getRoomList();
+    createRoomModalRef.value!.closeModal();
+    ElMessage.success('更新成功')
+  } else {
+    ElMessage.error(message)
+  }
 }
 
 
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.control-text {
+  color: #409eff;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    color: #0976e4;
+  }
+}
+</style>
