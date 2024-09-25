@@ -59,6 +59,7 @@ import { reactive, useTemplateRef } from 'vue'
 import CreateRoomModal from '../components/CreateRoomModal.vue';
 import { deleteRoom, roomSearch, createRoom, getRoom, renewalRoom, type CreateMeetingRoom } from '../api/room'
 import { ElMessage, ElMessageBox } from 'element-plus';
+import { type MeetingRoomSearchResult } from '../type'
 
 interface SearchMeetingRoom {
   name?: string;
@@ -66,17 +67,6 @@ interface SearchMeetingRoom {
   equipment?: string;
 }
 
-interface MeetingRoomSearchResult {
-  id: number,
-  name: string;
-  capacity: number;
-  location: string;
-  equipment: string;
-  description: string;
-  isBooked: boolean;
-  createTime: Date;
-  updateTime: Date;
-}
 
 
 const formInline = reactive<SearchMeetingRoom>({
@@ -184,13 +174,5 @@ const handleUpdateRoomEvent = async (id: number, data: CreateMeetingRoom) => {
 </script>
 
 <style lang="scss">
-.control-text {
-  color: #409eff;
-  cursor: pointer;
-  transition: 0.3s;
 
-  &:hover {
-    color: #0976e4;
-  }
-}
 </style>

@@ -40,7 +40,9 @@
         </el-table-column>
       </el-table>
 
-      <el-pagination v-model:current-page="paginationData.pageNo" v-model:page-size="paginationData.pageSize" :page-sizes="[5, 10, 20, 50]" layout="sizes, prev, pager, next" :total="paginationData.totalCount" @size-change="getUserList" @current-change="getUserList" />
+      <el-pagination v-model:current-page="paginationData.pageNo" v-model:page-size="paginationData.pageSize"
+        :page-sizes="[5, 10, 20, 50]" layout="sizes, prev, pager, next" :total="paginationData.totalCount"
+        @size-change="getUserList" @current-change="getUserList" />
     </div>
   </div>
 </template>
@@ -49,21 +51,12 @@
 import { reactive } from 'vue'
 import { freeze, userSearch } from '../api/list'
 import { ElMessage } from 'element-plus';
+import { type UserSearchResult } from '../type'
 
 interface SearchUser {
   username: string;
   nickName: string;
   email: string;
-}
-
-interface UserSearchResult {
-  id: number;
-  username: string;
-  nickName: string;
-  email: string;
-  headPic: string;
-  createTime: Date;
-  isFrozen: boolean;
 }
 
 const formInline = reactive<SearchUser>({
@@ -75,7 +68,7 @@ const formInline = reactive<SearchUser>({
 const paginationData = reactive({
   pageNo: 1,
   pageSize: 5,
-  totalCount:5,
+  totalCount: 5,
 })
 
 const tableData = ref<UserSearchResult[]>([])

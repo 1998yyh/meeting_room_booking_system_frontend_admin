@@ -14,6 +14,7 @@
     <div class="login-area" flex-center>
       <el-button w-lg type="primary" @click="submit">登录</el-button>
     </div>
+
   </div>
 </template>
 

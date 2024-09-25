@@ -38,11 +38,11 @@ defineOptions({
   name: "CreateRoomModal"
 })
 
-
 const isEdit = ref(false);
-const updateId = ref<number>(0)
-const dialogVisiable = ref(false)
 
+const updateId = ref<number>(0)
+
+const dialogVisiable = ref(false)
 
 export interface CreateMeetingRoom {
   name: string;
@@ -52,22 +52,18 @@ export interface CreateMeetingRoom {
   description: string;
 }
 
-
 const emit = defineEmits<{
   submit: [data: CreateMeetingRoom],
   update: [id: number, data: CreateMeetingRoom]
 }>()
 
-
 const form = reactive<Partial<CreateMeetingRoom>>({
   name: '',
-  capacity: 0,
+  capacity: undefined,
   location: '',
   equipment: '',
   description: '',
 })
-
-
 
 const handleSubmit = () => {
   const result = form as CreateMeetingRoom;
@@ -78,10 +74,15 @@ const handleSubmit = () => {
   }
 }
 
-
 // 清空数据
 const handleOpenEvent = () => {
-
+  Object.assign(form, {
+    name: '',
+    capacity: undefined,
+    location: '',
+    equipment: '',
+    description: '',
+  })
 }
 
 
@@ -95,11 +96,8 @@ const updateRoom = (id: number, data: CreateMeetingRoom) => {
   isEdit.value = true;
   dialogVisiable.value = true;
   updateId.value = id;
-  Object.assign(form,data)
-  // form.value = data;
-
+  Object.assign(form, data)
 }
-
 
 const closeModal = () => {
   dialogVisiable.value = false;

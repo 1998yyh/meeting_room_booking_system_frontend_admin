@@ -49,21 +49,12 @@
 import { reactive } from 'vue'
 import { freeze, userSearch } from '../api/list'
 import { ElMessage } from 'element-plus';
+import { type UserSearchResult } from '../type'
 
 interface SearchUser {
   username: string;
   nickName: string;
   email: string;
-}
-
-interface UserSearchResult {
-  id: number;
-  username: string;
-  nickName: string;
-  email: string;
-  headPic: string;
-  createTime: Date;
-  isFrozen: boolean;
 }
 
 const formInline = reactive<SearchUser>({

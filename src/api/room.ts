@@ -53,4 +53,3 @@ export async function getRoom(id: number): Promise<baseResponse> {
 export async function renewalRoom(data: UpdateMeetingRoom): Promise<baseResponse> {
   return await request.post('/meeting-room/update/', data)
 }
-
