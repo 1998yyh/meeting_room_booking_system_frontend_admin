@@ -29,7 +29,7 @@ async function refreshToken() {
 }
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:3000/',
+    baseURL: 'http://localhost/api',
     timeout: 3000
 });
 
@@ -49,8 +49,6 @@ interface PendingTask {
 }
 
 
-
-
 axiosInstance.interceptors.response.use(
     (response) => {
         return response.data
@@ -62,7 +60,6 @@ axiosInstance.interceptors.response.use(
         }
 
         const { data, config } = error.response;
-
 
         if (refreshing && !config.url.includes('/user/admin/refresh')) {
             return new Promise((resolve) => {
@@ -79,8 +76,6 @@ axiosInstance.interceptors.response.use(
 
             const res = await refreshToken();
 
-
-            console.log('res',res);
             refreshing = false;
 
 
@@ -98,7 +93,6 @@ axiosInstance.interceptors.response.use(
 
                 console.log(1111111);
 
-           
             }
 
         } else {
@@ -107,8 +101,6 @@ axiosInstance.interceptors.response.use(
         }
     }
 );
-
-
 
 
 
