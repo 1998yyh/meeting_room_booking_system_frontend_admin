@@ -29,7 +29,7 @@ async function refreshToken() {
 }
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost/api',
+    baseURL: 'http://118.178.238.224/api',
     timeout: 3000
 });
 
